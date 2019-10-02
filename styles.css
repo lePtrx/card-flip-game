@@ -14,6 +14,7 @@
 
 html {
   min-height: 100vh;
+  font-family: Arvo;
 }
 
 body {
@@ -29,42 +30,6 @@ body {
   font-size: 6em;
 }
 
-.overlay-text {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  color: #ff6d00;
-  font-family: Creepster, serif;
-}
-
-.overlay-text-small {
-  font-size: 0.3em;
-}
-
-.overlay-text.visible {
-  display: flex;
-  flex-direction: column;
-  animation: overlay-grow 500ms forwards;
-}
-
-@keyframes overlay-grow {
-  from {
-    background-color: rgba(0, 0, 0, 0);
-    font-size: 0;
-  }
-
-  to {
-    background-color: rgba(0, 0, 0, 0.8);
-    font-size: 10em;
-  }
-}
-
 .game-info-container {
   grid-column: 1 / -1;
   display: flex;
@@ -72,16 +37,15 @@ body {
 }
 
 .game-info {
-  font-family: Arvo, serif;
   color: #ffbb89;
   font-size: 2em;
 }
 
 .game-container {
+  margin: 50px auto;
   display: grid;
   grid-template-columns: repeat(4, auto);
   grid-gap: 10px;
-  margin: 50px;
   justify-content: center;
   perspective: 500px;
 }
@@ -94,17 +58,17 @@ body {
 
 .card-face {
   position: absolute;
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
   border-radius: 12px;
   border-width: 1px;
   border-style: solid;
+  overflow: hidden;
   transition: transform 500ms ease-in-out;
+  backface-visibility: hidden;
 }
 
 .card.visible .card-back {
@@ -115,50 +79,26 @@ body {
   transform: rotateY(0);
 }
 
-.card.matched .card-value {
+.card.matched .card-front .card-value {
   animation: dance 1s linear infinite 500ms;
-}
-
-@keyframes dance {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-
-  25% {
-    transform: rotate(-30deg);
-  }
-
-  75% {
-    transform: rotate(30deg);
-  }
 }
 
 .card-back {
   background-color: black;
   border-color: #ff6d00;
-}
-
-.card-front {
-  background-color: #ffbb89;
-  border-color: #333;
-  transform: rotateY(180deg);
-}
-
-.card-value {
-  transition: transform 100ms ease-in-out;
-  transform: scale(0.9);
-}
-
-.card-front:hover .card-value {
-  transform: scale(1);
+  transform: rotateY(0);
 }
 
 .cob-web {
   position: absolute;
+  transition: width 100ms ease-in-out, height 100ms ease-in-out;
   width: 47px;
   height: 47px;
-  transition: width 100ms ease-in-out, height 100ms ease-in-out;
+}
+
+.card-face:hover .cob-web {
+  width: 52px;
+  height: 52px;
 }
 
 .cob-web-top-left {
@@ -186,17 +126,80 @@ body {
 
 .spider {
   align-self: flex-start;
-  transform: translateY(-10px);
   transition: transform 100ms ease-in-out;
+  transform: translateY(-10px);
 }
 
 .card-back:hover .spider {
   transform: translateY(0);
 }
 
-.card-face:hover .cob-web {
-  width: 52px;
-  height: 52px;
+.card-value {
+  position: relative;
+  transition: transform 100ms ease-in-out;
+  transform: scale(0.9);
+}
+
+.card-front:hover .card-value {
+  transform: scale(1);
+}
+
+.card-front {
+  background-color: #ffbb89;
+  border-color: #333;
+  transform: rotateY(180deg);
+}
+
+.overlay-text {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: none;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #ff6d00;
+  font-family: Creepster, serif;
+  transition: background-color 500ms, font-size 500ms;
+}
+
+.overlay-text-small {
+  font-size: 0.3em;
+}
+
+.overlay-text.visible {
+  display: flex;
+  animation: overlay-grow 500ms forwards;
+}
+
+@keyframes overlay-grow {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 0;
+  }
+
+  to {
+    background-color: rgba(0, 0, 0, 0.8);
+    font-size: 10em;
+  }
+}
+
+@keyframes dance {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(-30deg);
+  }
+
+  75% {
+    transform: rotate(30deg);
+  }
 }
 
 @media (max-width: 600px) {
