@@ -1,3 +1,4 @@
+// To set up class and constructor for all the sounds
 class AudioController {
   constructor() {
     this.bgMusic = new Audio("Assets/Audio/creepy.mp3");
@@ -27,7 +28,7 @@ class AudioController {
 
   // Sound for when there's a match
   match() {
-    this.matchSound();
+    this.matchSound.play();
   }
 
   // Stop bgm and plays victory bgm when game is won
@@ -43,6 +44,7 @@ class AudioController {
   }
 }
 
+// Setting up class and all the functions to run the game
 class MixOrMatch {
   constructor(totalTime, cards) {
     this.cardsArray = cards;
@@ -52,12 +54,15 @@ class MixOrMatch {
     this.ticker = document.getElementById("flips");
     this.audioController = new AudioController();
   }
+
+  // Function to start the game
   startGame() {
     this.cardToCheck = null;
     this.totalClicks = 0;
     this.timeRemaining = this.totalTime;
     this.matchedCards = [];
     this.busy = true;
+    // To start the music, shuffle cards, countdown, and prevent user from clicking anything for 0.5 sec
     setTimeout(() => {
       this.audioController.startMusic();
       this.shuffleCards();
@@ -68,18 +73,22 @@ class MixOrMatch {
     this.timer.innerText = this.timeRemaining;
     this.ticker.innerText = this.totalClicks;
   }
+
+  // To flip back all the cards to the original position
   hideCards() {
     this.cardsArray.forEach(card => {
       card.classList.remove("visible");
       card.classList.remove("matched");
     });
   }
+
+  // To enable the animation and sound of card flipping
   flipCard(card) {
     if (this.canFlipCard(card)) {
+      card.classList.add("visible");
       this.audioController.flip();
       this.totalClicks++;
       this.ticker.innerText = this.totalClicks;
-      card.classList.add("visible");
 
       if (this.cardToCheck) {
         this.checkForCardMatch(card);
@@ -88,6 +97,8 @@ class MixOrMatch {
       }
     }
   }
+
+  // To check if cards clicked are a match
   checkForCardMatch(card) {
     if (this.getCardType(card) === this.getCardType(this.cardToCheck))
       this.cardMatch(card, this.cardToCheck);
@@ -95,6 +106,8 @@ class MixOrMatch {
 
     this.cardToCheck = null;
   }
+
+  // To enable animation and sound for when there's a match of cards
   cardMatch(card1, card2) {
     this.matchedCards.push(card1);
     this.matchedCards.push(card2);
@@ -105,17 +118,23 @@ class MixOrMatch {
       this.victory();
     }
   }
+
+  // To enable animation when cards are not a match, flipping back the cards
   cardMisMatch(card1, card2) {
     this.busy = true;
     setTimeout(() => {
       card1.classList.remove("visible");
       card2.classList.remove("visible");
       this.busy = false;
-    }, 1000);
+    }, 800);
   }
+
+  // To get url info from index.html for each card value for comparison of match
   getCardType(card) {
     return card.getElementsByClassName("card-value")[0].src;
   }
+
+  // To start the countdown of timer
   startCountDown() {
     return setInterval(() => {
       this.timeRemaining--;
@@ -123,15 +142,19 @@ class MixOrMatch {
       if (this.timeRemaining === 0) this.gameOver();
     }, 1000);
   }
+
+  // To show game over screen and sound
   gameOver() {
     clearInterval(this.countDown);
     this.audioController.gameOver();
     document.getElementById("game-over-text").classList.add("visible");
   }
+
+  // To show victory screen and sound
   victory() {
     clearInterval(this.countDown);
     this.audioController.victory();
-    document.getElementById("victory-text-").classList.add("visible");
+    document.getElementById("victory-text").classList.add("visible");
   }
 
   // Card shuffling algorithm
@@ -143,6 +166,7 @@ class MixOrMatch {
     }
   }
 
+  // To check if the cards can be flipped
   canFlipCard(card) {
     return (
       !this.busy &&
@@ -155,7 +179,7 @@ class MixOrMatch {
 function ready() {
   let overlays = Array.from(document.getElementsByClassName("overlay-text"));
   let cards = Array.from(document.getElementsByClassName("card"));
-  let game = new MixOrMatch(60, cards);
+  let game = new MixOrMatch(5, cards);
 
   overlays.forEach(overlay => {
     overlay.addEventListener("click", () => {
